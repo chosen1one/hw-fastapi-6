@@ -13,9 +13,7 @@ class UsersRepository:
     users: list[User]
 
     def __init__(self):
-        self.users = [
-            User(id = 0, email = "123@gmail.com", full_name="Aza", password="123")
-        ]
+        self.users = []
 
     def get_by_email(self, email: str) -> User:
         for user in self.users:

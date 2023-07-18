@@ -58,11 +58,11 @@ def post_login(
 ):
     user = users_repository.get_by_email(email)
     if user.password == password:
-        response = Response("Logged in!")
+        response = RedirectResponse("/profile", status_code=303)
         token = encode_jwt(user.id)
         response.set_cookie("token", token)
         return response
-    return Response("Permission Denied!")
+    return Response("Permission Denied!", status_code=404)
 
 @app.get("/profile")
 def get_profile(request: Request, token: str = Cookie()):
@@ -95,7 +95,7 @@ def post_flowers(
 ):
     payload = Flower(name=name, count=count, cost=cost)
     flowers_repository.save(payload)
-    return RedirectResponse("flowers", status_code=303)
+    return RedirectResponse("/flowers", status_code=303)
 
 @app.get("/cart/items")
 def get_items(
@@ -107,7 +107,7 @@ def get_items(
 
     flowers = [flowers_repository.get_by_id(id) for id in cart_json]
     total = sum(flower.cost for flower in flowers)
-    
+
     return templates.TemplateResponse(
         "cart.html",
         {
